@@ -1,0 +1,89 @@
+<div class="flex justify-content-between">
+    <h2>Products</h2>
+    <p-button label="Add Product" (click)="showAddModal()" [style]="{'float':'right'}"></p-button>
+</div>
+<br><br><br>
+<p-table #dt [value]="product" 
+[globalFilterFields]="['title','price','category']" [paginator]="true"
+ [rows]="10" [tableStyle]="{ 'min-width': '60rem' }">
+    <ng-template pTemplate="caption"> 
+        <div class="p-d-flex">
+			<span class="p-input-icon-left p-ml-auto">
+                <i class="pi pi-search"></i>
+                <input pInputText type="text" 
+                (input)="dt.filterGlobal(getEventValue($event), 'contains')"
+                 placeholder="Search keyword" />
+            </span>
+		</div>
+    </ng-template>
+    <ng-template pTemplate="header">
+        <tr>           
+            <th>Title</th>
+            <th>Price</th>          
+            <th>Category</th>
+            <th>Image</th>
+        </tr>
+    </ng-template>
+    <ng-template pTemplate="body" let-product>
+        <tr>         
+            <td>{{ product.title }}</td>
+            <td>{{ product.price }}</td>      
+            <td>{{ product.category }}</td>
+            <td><img src="{{ product.image }}" height="30px"></td>
+        </tr>
+    </ng-template>
+    <ng-template pTemplate="emptymessage">
+		<tr>
+			<td colspan="7">No products found.</td>
+		</tr>
+	</ng-template>
+</p-table>
+<p-dialog header="Add Product" [(visible)]="displayModal" 
+    [modal]="true" [style]="{ width: '50rem' }"
+    [breakpoints]="{ '1199px': '75vw', '575px': '90vw' }">
+    <form [formGroup]="productForm">
+    <div class="field">
+        <label class="block">Title</label><br>
+        <input type="text" class="p-inputtext-lg"
+        pInputText id="title" formControlName="title" />
+        <small class="p-error block" 
+        *ngIf="productForm.get('title')?.invalid && productForm.get('title')?.dirty">
+            Title is required</small>
+    </div><br>
+    <div class="field">
+        <label class="block">Price</label><br>
+        <p-inputNumber id="price" class="p-inputtext-lg"
+        formControlName="price"></p-inputNumber>
+        <small class="p-error block" 
+        *ngIf="productForm.get('price')?.invalid && productForm.get('price')?.dirty">
+            Price is required</small>
+    </div><br>
+    <div class="field">
+        <label class="block">Category</label><br>
+        <input type="text" class="p-inputtext-lg"
+        pInputText  id="category" formControlName="category" /> 
+        <small class="p-error block" 
+        *ngIf="productForm.get('category')?.invalid && productForm.get('category')?.dirty">
+         Category is required</small>      
+    </div><br>
+    <div class="field">
+        <label class="block">Image</label><br>
+        <input type="text" class="p-inputtext-lg"
+        pInputText  id="image" formControlName="image" />
+        <small class="p-error block" 
+        *ngIf="productForm.get('image')?.invalid && productForm.get('image')?.dirty">
+         Image is required</small>  
+    </div><br>
+    </form>
+    <ng-template pTemplate="footer">
+        <p-button icon="pi pi-check" 
+        (click)="addProduct()" 
+        label="Add" [disabled]="productForm.invalid">
+        </p-button>
+        <p-button icon="pi pi-check" 
+        (click)="closeModal()" 
+        label="Cancel" pAutoFocus [autofocus]="true">
+        </p-button>      
+    </ng-template>
+</p-dialog>
+<p-toast position="top-right"></p-toast>
